@@ -1,0 +1,1 @@
+python src/launcher.py --phase=train --data-path=/home/zhluo/work/datasets/mnt/ramdisk/max/90kDICT32px/train.txt --data-base-dir=/home/zhluo/work/datasets/mnt/ramdisk/max/90kDICT32px --log-path=log.txt --load-model --model-dir=output

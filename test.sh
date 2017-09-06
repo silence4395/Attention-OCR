@@ -1,0 +1,1 @@
+python src/launcher.py --phase=test --visualize --data-path=evaluation_data/svt/test.txt --data-base-dir=evaluation_data/svt --log-path=log_test.txt --load-model --model-dir=output --output-dir=results
