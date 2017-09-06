@@ -19,11 +19,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import __init__
+
 import random
 
 import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
+from lstm import BasicLSTMCell
 
 #from tensorflow.models.rnn.translate import data_utils
 #from tensorflow.nn import rnn, rnn_cell
@@ -47,7 +50,10 @@ class Seq2SeqModel(object):
       http://arxiv.org/abs/1412.2007
     """
 
-    def __init__(self, encoder_masks, encoder_inputs_tensor, 
+    def __init__(self,
+            lstm_type,
+            encoder_masks,
+            encoder_inputs_tensor, 
             decoder_inputs,
             target_weights,
             target_vocab_size, 
@@ -76,6 +82,7 @@ class Seq2SeqModel(object):
           num_samples: number of samples for sampled softmax.
           forward_only: if set, we do not construct the backward pass in the model.
         """
+        self.lstm_type = lstm_type
         self.encoder_inputs_tensor = encoder_inputs_tensor
         self.decoder_inputs = decoder_inputs
         self.target_weights = target_weights
@@ -84,7 +91,7 @@ class Seq2SeqModel(object):
         self.encoder_masks = encoder_masks
 
         # Create the internal multi-layer cell for our RNN.
-        single_cell = tf.contrib.rnn.BasicLSTMCell(attn_num_hidden, forget_bias=0.0, state_is_tuple=False)
+        single_cell = BasicLSTMCell(attn_num_hidden, forget_bias=0.0, lstm_type=self.lstm_type, state_is_tuple=False)
         if use_gru:
             print("using GRU CELL in decoder")
             single_cell = tf.contrib.rnn.GRUCell(attn_num_hidden)
@@ -97,9 +104,9 @@ class Seq2SeqModel(object):
         def seq2seq_f(lstm_inputs, decoder_inputs, seq_length, do_decode):
 
             num_hidden = attn_num_layers * attn_num_hidden
-            lstm_fw_cell = tf.contrib.rnn.BasicLSTMCell(num_hidden, forget_bias=0.0, state_is_tuple=False)
+            lstm_fw_cell = BasicLSTMCell(num_hidden, forget_bias=0.0, lstm_type=self.lstm_type, state_is_tuple=False)
             # Backward direction cell
-            lstm_bw_cell = tf.contrib.rnn.BasicLSTMCell(num_hidden, forget_bias=0.0, state_is_tuple=False)
+            lstm_bw_cell = BasicLSTMCell(num_hidden, forget_bias=0.0, lstm_type=self.lstm_type, state_is_tuple=False)
 
             pre_encoder_inputs, output_state_fw, output_state_bw = tf.contrib.rnn.static_bidirectional_rnn(lstm_fw_cell, lstm_bw_cell, lstm_inputs,
                 initial_state_fw=None, initial_state_bw=None,

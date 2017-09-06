@@ -28,6 +28,7 @@ except ImportError:
 class Model(object):
 
     def __init__(self,
+            lstm_type,
             phase,
             visualize,
             data_path,
@@ -67,6 +68,7 @@ class Model(object):
 
 
         #logging.info('valid_target_length: %s' %(str(valid_target_length)))
+        logging.info('lstm_type: %s' % (lstm_type))
         logging.info('phase: %s' % phase)
         logging.info('model_dir: %s' % (model_dir))
         logging.info('load_model: %s' % (load_model))
@@ -107,6 +109,7 @@ class Model(object):
             self.target_weights.append(tf.placeholder(tf.float32, shape=[None],
                                                     name="weight{0}".format(i)))
       
+        self.lstm_type = lstm_type
         self.reg_val = reg_val
         self.sess = session
         self.evaluate = evaluate
@@ -139,6 +142,7 @@ class Model(object):
 
         with tf.device(gpu_device_id):
             self.attention_decoder_model = Seq2SeqModel(
+                lstm_type = self.lstm_type,
                 encoder_masks = self.encoder_masks,
                 encoder_inputs_tensor = self.perm_conv_output, 
                 decoder_inputs = self.decoder_inputs,
@@ -278,8 +282,8 @@ class Model(object):
                             self.visualize_attention(file_list[idx], step_attns[idx], output_valid, ground_valid, num_incorrect>0, real_len)
                     num_correct += 1. - num_incorrect
                 if num_total % 100 == 0:
-                    logging.info('%f out of %d correct, precision: %f' %(num_correct, num_total, num_correct / num_total))
-            logging.info('%f out of %d correct, precision: %f' %(num_correct, num_total, num_correct / num_total))
+                    logging.info('%f out of %d correct, precision : %f' %(num_correct, num_total, num_correct / num_total))
+            logging.info('%f out of %d correct, precision : %f' %(num_correct, num_total, num_correct / num_total))
         elif self.phase == 'train':
             total = (self.s_gen.get_size() // self.batch_size)
             with tqdm(desc='Train: ', total=total) as pbar:

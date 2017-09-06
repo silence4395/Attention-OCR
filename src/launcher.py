@@ -13,12 +13,15 @@ import exp_config
 
 def process_args(args, defaults):
     parser = argparse.ArgumentParser()
-
+    
+    parser.add_argument('--lstm_type', dest="lstm_type", type=str, default="origin",
+                        help=('Set LSTM use activation function type, default origin'))
+    
     parser.add_argument('--gpu-id', dest="gpu_id",
                         type=int, default=defaults.GPU_ID)
 
     parser.add_argument('--use-gru', dest='use_gru', action='store_true')
-
+    
     parser.add_argument('--phase', dest="phase",
                         type=str, default=defaults.PHASE,
                         choices=['train', 'test'],
@@ -123,6 +126,7 @@ def main(args, defaults):
 
     with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
         model = Model(
+                lstm_type = parameters.lstm_type,
                 phase = parameters.phase,
                 visualize = parameters.visualize,
                 data_path = parameters.data_path,
