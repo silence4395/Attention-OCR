@@ -49,6 +49,7 @@ do
     do
 	./run.sh ${lstm_type[$lstm_index]} $app_type 32 23
 	LookResult
+	rm -rf results/*
 	printf "%-20s %-25s %10s\n" ${lstm_type[$lstm_index]} $app_type $accuracy >> result.txt
     done
     let "lstm_index++"

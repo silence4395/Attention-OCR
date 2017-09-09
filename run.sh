@@ -16,11 +16,21 @@
 ####################################################
 lstm_type=$1
 
-sigmoid_type=$2
+if [[ $1 = "sigmoid_diy" || $1 == "sigmoid_tanh_diy" ]]
+then
+    sigmoid_type=$2
+else
+    sigmoid_type=SIGMOID
+fi
 sigmoid_bit_width=$3
 sigmoid_fraction_length=$4
 
-tanh_type=$2
+if [[ $1 = "tanh_diy" || $1 == "sigmoid_tanh_diy" ]]
+then
+    tanh_type=$2
+else
+    tanh_type=TANH
+fi
 tanh_bit_width=$3
 tanh_fraction_length=$4
 

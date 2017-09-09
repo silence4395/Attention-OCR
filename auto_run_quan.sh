@@ -52,6 +52,7 @@ do
     do
 	./run.sh ${lstm_type[$lstm_index]} ${origin_type[$app_index]} 32 23
 	LookResult
+	rm -rf results/*
 	printf "%-20s %-30s %-10d %-10d %-3.10f\n" ${lstm_type[$lstm_index]} ${origin_type[$app_index]} 32 23 $accuracy>> result.txt
 	if [ $app_index -gt 3 ]
 	then
@@ -60,6 +61,7 @@ do
 	    do
 		./run.sh ${lstm_type[$lstm_index]} ${approximate_type[$app_index]} ${bit_width[$bit_index]} ${fl_type2[$bit_index]}
 		LookResult
+		rm -rf results/*
 		printf "%-20s %-30s %-10d %-10d %-3.10f\n" ${lstm_type[$lstm_index]} ${approximate_type[$app_index]} ${bit_width[$bit_index]} ${fl_type2[$bit_index]} $accuracy >> result.txt
 		let "bit_index++"
 	    done
@@ -70,6 +72,7 @@ do
 	    do
 		./run.sh ${lstm_type[$lstm_index]} ${approximate_type[$app_index]} ${bit_width[$bit_index]} ${fl_type1[$bit_index]}
 		LookResult
+		rm -rf results/*
 		printf "%-20s %-30s %-10d %-10d %-3.10f\n" ${lstm_type[$lstm_index]} ${approximate_type[$app_index]} ${bit_width[$bit_index]} ${fl_type1[$bit_index]} $accuracy >> result.txt
 		let "bit_index++"
 	    done
