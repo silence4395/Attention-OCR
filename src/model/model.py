@@ -134,7 +134,7 @@ class Model(object):
             assert False, phase
 
         with tf.device(gpu_device_id):
-            cnn_model = CNN(self.img_data, True) #(not self.forward_only))
+            cnn_model = CNN(self.img_data, (not self.forward_only)) #(not self.forward_only))
             self.conv_output = cnn_model.tf_output()
             self.concat_conv_output = tf.concat(axis=1, values=[self.conv_output, self.zero_paddings])
 
